@@ -1,51 +1,22 @@
 // import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchContacts } from "redux/operations";
 import  ContactForm  from "./ContactForm/ContactForm";
 import { ContactList } from "./Contacts/ContactList";
-import { Filter }  from "./Filter/Filter";
+import { Filter } from "./Filter/Filter";
+import { getIsLoading, getError } from 'redux/selectors';
 // import { nanoid } from 'nanoid';
 
 
 export  function App() {
-//   const [contacts, setContacts] = useState([]);
-// //   const [filter, setFilter] = useState('');
+  const dispatch = useDispatch();
+  const isLoading = useSelector(getIsLoading);
+  const error = useSelector(getError);
 
-//   useEffect(() => {
-//     const parsedContacts = JSON.parse(localStorage.getItem('contactList'));
-//     if (parsedContacts !== 0) {
-//       setContacts(parsedContacts);
-//     }
-//     }, []);
-//   useEffect(() => {
-//     localStorage.setItem('contactList', JSON.stringify(contacts));
-//   }, [contacts]);
-
-// const handleDelete = event => {
-//   setContacts(contacts.filter(contact => contact.id !== event));
-//   };
-// const addNewContacts = () => {
-//     const newContacts = contacts.filter(contact => {
-//       return contact.name
-//         .toLowerCase()
-//         .includes(filter.toLowerCase());
-//     });
-//     return newContacts;
-//   };
-// const addFilter = (filterValue) => {
-//     setFilter(filterValue)
-//   }
-// const handleSubmit = event => {
-//     const name = event.name;
-//     const number = event.number;
-//     const contactsLists = [...contacts];
-
-//     if (contactsLists.findIndex(contact => name === contact.name) !== -1) {
-//       alert(`${name} is already in contacts.`);
-//     } else {
-//       contactsLists.push({ name, id: nanoid(), number });
-//     }
-
-//     setContacts(contactsLists);
-//   };
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
   
     return (
     <div
@@ -63,9 +34,9 @@ export  function App() {
       <h1>Phonebook</h1>
       <ContactForm />
         <h2>Contacts</h2>
-      <Filter  />
-      <ContactList 
-      />
+        <Filter />
+        {isLoading && !error}
+      <ContactList />
     </div>
   );
 }
